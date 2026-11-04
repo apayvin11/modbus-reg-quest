@@ -1,0 +1,16 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ModbusRegQuest
+GenericName=Modbus read/write workstation
+GenericName[ru]=Управление устройствами Modbus
+Comment=Read, write and inspect Modbus TCP and RTU exchanges
+Comment[ru]=Опрос, настройка и управление устройствами Modbus TCP и RTU
+Exec=modbusregquest
+TryExec=modbusregquest
+Icon=modbusregquest
+Terminal=false
+Categories=Utility;Engineering;
+Keywords=Modbus;PLC;RTU;TCP;monitor;
+StartupNotify=true
+StartupWMClass=ModbusRegQuest

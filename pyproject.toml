@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "modbusregquest"
+version = "1.0.0"
+description = "A cross-platform Modbus read/write workstation for macOS and Linux"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+readme = "Readme.md"
+requires-python = ">=3.10"
+dependencies = ["PySide6-Essentials>=6.8,<7", "pyserial>=3.5,<4"]
+
+[project.optional-dependencies]
+build = ["pyinstaller>=6.10,<7"]
+
+[project.scripts]
+modbusregquest = "modbusregquest.app:main"
+
+[tool.setuptools.packages.find]
+include = ["modbusregquest*"]
