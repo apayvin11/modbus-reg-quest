@@ -51,11 +51,11 @@ Modbus TCP / RTU · Read and write · Light / dark theme · Apache 2.0
 <details>
 <summary>Dark theme, commands, and communication log</summary>
 
-![Dark theme](assets/monitor-dark.png)
+![Dark theme](assets/monitor-dark-en.png)
 
-![Command: request and response with labeled fields](assets/command-bytes-dark.png)
+![Command: request and response with labeled fields](assets/command-bytes-dark-en.png)
 
-![Log: bytes and register addresses](assets/log-bytes-light.png)
+![Log: bytes and register addresses](assets/log-bytes-light-en.png)
 
 </details>
 
