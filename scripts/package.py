@@ -118,7 +118,7 @@ def deb(app, arch, output, icons):
     shutil.copy2(ROOT/"assets"/"modbusregquest.svg", scalable/"modbusregquest.svg")
     docs = stage/"usr"/"share"/"doc"/"modbusregquest"
     docs.mkdir(parents=True)
-    for filename in ("Readme.md", "THIRD_PARTY_NOTICES.md", "LICENSE", "NOTICE"):
+    for filename in ("README.md", "README.ru.md", "THIRD_PARTY_NOTICES.md", "LICENSE", "NOTICE"):
         shutil.copy2(ROOT/filename, docs/filename)
     installed_size = sum(p.stat().st_size for p in stage.rglob("*") if p.is_file() and not p.is_symlink())//1024
     dependencies = ("libc6 (>= 2.39), libstdc++6 (>= 13), libgl1, libegl1, libopengl0, "

@@ -1,3 +1,5 @@
+[English](README.md) | **Русский**
+
 <div align="center">
 
 <img src="assets/modbusregquest.svg" width="104" alt="Иконка ModbusRegQuest">
@@ -393,7 +395,7 @@ QT_QPA_PLATFORM=xcb xvfb-run -a .venv/bin/python -m modbusregquest \
 
 ### Оглавление README
 
-Оглавление строится автоматически из заголовков Markdown `##`–`######`. GitHub Actions обновляет его и сохраняет отдельным коммитом после изменений README или генератора в основной ветке; в pull request проверяет актуальность. Workflow также можно запустить вручную через **Actions → README table of contents → Run workflow**.
+Оглавление строится автоматически из заголовков Markdown `##`–`######` в обоих файлах: `README.md` и `README.ru.md`. GitHub Actions обновляет оба файла и сохраняет изменения отдельным коммитом после изменений README или генератора в основной ветке; в pull request проверяет актуальность обоих оглавлений. Workflow также можно запустить вручную через **Actions → README table of contents → Run workflow**.
 
 Для локального обновления достаточно Python 3.10+, зависимости приложения устанавливать не нужно:
 
@@ -402,7 +404,7 @@ python3 scripts/update_readme_toc.py
 python3 scripts/update_readme_toc.py --check
 ```
 
-Редактируйте заголовки разделов; блок между комментариями `toc:start` и `toc:end` обновляется генератором.
+Редактируйте заголовки разделов; блок между комментариями `toc:start` и `toc:end` обновляется генератором с сохранением языка его заголовка. Чтобы обработать только одну версию, передайте путь к ней, например `python3 scripts/update_readme_toc.py README.ru.md`.
 
 ## Решение проблем
 

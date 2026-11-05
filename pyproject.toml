@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "A cross-platform Modbus read/write workstation for macOS and Linux"
 license = "Apache-2.0"
 license-files = ["LICENSE", "NOTICE"]
-readme = "Readme.md"
+readme = "README.md"
 requires-python = ">=3.10"
 dependencies = ["PySide6-Essentials>=6.8,<7", "pyserial>=3.5,<4"]
 

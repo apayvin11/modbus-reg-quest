@@ -11,7 +11,8 @@ import sys
 
 START = "<!-- toc:start -->"
 END = "<!-- toc:end -->"
-DEFAULT_README = Path(__file__).resolve().parents[1] / "Readme.md"
+ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_READMES = (ROOT / "README.md", ROOT / "README.ru.md")
 
 
 def heading_text(source: str) -> str:
@@ -69,30 +70,39 @@ def update_document(document: str) -> str:
         raise ValueError("TOC markers are in the wrong order")
     newline = "\r\n" if "\r\n" in document else "\n"
     prefix, suffix = document[:start], document[end:]
+    heading = re.search(r"^##[ \t]+(.+?)\s*$", document[start:end], re.MULTILINE)
+    title = heading[1] if heading else "Contents"
     # Seed the generated heading before slugging, so collisions stay correct.
-    skeleton = prefix + newline + "## Оглавление" + newline + suffix
+    skeleton = prefix + newline + "## " + title + newline + suffix
     toc = table_of_contents(skeleton).replace("\n", newline)
-    return prefix + newline*2 + "## Оглавление" + newline*2 + toc + newline*2 + suffix
+    return prefix + newline*2 + "## " + title + newline*2 + toc + newline*2 + suffix
 
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("path", nargs="?", type=Path, default=DEFAULT_README)
+    parser.add_argument("paths", nargs="*", type=Path, help="README paths (default: both languages)")
     parser.add_argument("--check", action="store_true", help="Exit 1 if the TOC is stale; do not modify files")
     args = parser.parse_args(argv)
+    status = 0
+    for path in args.paths or DEFAULT_READMES:
+        status = max(status, update_file(path, check=args.check))
+    return status
+
+
+def update_file(path: Path, *, check: bool) -> int:
     try:
-        with args.path.open(encoding="utf-8", newline="") as stream:
+        with path.open(encoding="utf-8", newline="") as stream:
             current = stream.read()
         updated = update_document(current)
         if updated == current:
-            print("README table of contents is up to date.")
+            print(f"Table of contents is up to date: {path}")
             return 0
-        if args.check:
-            print("README table of contents is stale. Run: python3 scripts/update_readme_toc.py", file=sys.stderr)
+        if check:
+            print(f"Table of contents is stale: {path}. Run: python3 scripts/update_readme_toc.py", file=sys.stderr)
             return 1
-        with args.path.open("w", encoding="utf-8", newline="") as stream:
+        with path.open("w", encoding="utf-8", newline="") as stream:
             stream.write(updated)
-        print(f"Updated table of contents: {args.path}")
+        print(f"Updated table of contents: {path}")
         return 0
     except (OSError, ValueError) as exc:
         print(str(exc), file=sys.stderr)

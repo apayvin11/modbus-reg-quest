@@ -28,7 +28,7 @@ class ReadmeTocTests(unittest.TestCase):
     def test_generated_block_is_idempotent_and_preserves_surrounding_text(self):
         prefix = '# Project\n\nIntro.\n'+START
         suffix = END+'\n\n## Оглавление\n\nBody.\n'
-        updated = update_document(prefix+'\nobsolete\n'+suffix)
+        updated = update_document(prefix+'\n## Оглавление\nobsolete\n'+suffix)
         self.assertTrue(updated.startswith(prefix))
         self.assertTrue(updated.endswith(suffix))
         self.assertNotIn('obsolete', updated)
@@ -36,6 +36,29 @@ class ReadmeTocTests(unittest.TestCase):
         self.assertEqual(update_document(updated), updated)
         crlf = updated.replace('\n', '\r\n')
         self.assertEqual(update_document(crlf), crlf)
+
+    def test_english_heading_is_preserved_and_used_for_slug_collisions(self):
+        document = START+'\n## Contents\n'+END+'\n## Contents\n'
+        updated = update_document(document)
+        self.assertIn('## Contents', updated)
+        self.assertIn('[Contents](#contents-1)', updated)
+        self.assertNotIn('Оглавление', updated)
+        self.assertEqual(update_document(updated), updated)
+
+    def test_default_checks_both_languages_even_when_first_is_stale(self):
+        from unittest.mock import patch
+
+        with tempfile.TemporaryDirectory() as temporary:
+            paths = (Path(temporary)/'README.md', Path(temporary)/'README.ru.md')
+            for path, title in zip(paths, ('Contents', 'Оглавление')):
+                path.write_text(START+'\n## '+title+'\n'+END+'\n## Section\n', encoding='utf-8')
+            with patch('scripts.update_readme_toc.DEFAULT_READMES', paths):
+                with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+                    self.assertEqual(main(['--check']), 1)
+                    self.assertEqual(main([]), 0)
+                    self.assertEqual(main(['--check']), 0)
+            for path in paths:
+                self.assertIn('[Section](#section)', path.read_text(encoding='utf-8'))
 
     def test_malformed_markers_are_rejected(self):
         for document in ('## No markers', END+'\n'+START, START+START+END):
